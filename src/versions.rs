@@ -54,6 +54,7 @@ impl Version {
 	}
 }
 
+#[derive(Debug)]
 pub struct VersionString {
 	pub interpreter: Option<String>,
 	pub version: Option<Version>,
