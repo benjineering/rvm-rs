@@ -11,5 +11,5 @@ pub enum Command {
 #[command(author, version, about, long_about = None)]
 pub struct Args {
 	#[command(subcommand)]
-	command: Command,
+	pub command: Command,
 }

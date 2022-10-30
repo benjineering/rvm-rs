@@ -1,5 +1,5 @@
 {
   "editor.detectIndentation": false,
   "editor.tabSize": 4,
-  "editor.useTabStops": true
+  "editor.insertSpaces": false
 }
