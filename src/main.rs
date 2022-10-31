@@ -1,11 +1,12 @@
 use clap::Parser;
 use cli::{Args, Command};
 use install::Installer;
-use versions::VersionString;
+use version::VersionId;
 
 mod cli;
+mod github;
 mod install;
-mod versions;
+mod version;
 
 fn main() {
 	let cli = Args::parse();
@@ -13,7 +14,7 @@ fn main() {
 
 	match command {
 		Command::Install { version } => {
-			let version = VersionString::from_string(&version).unwrap();
+			let version = VersionId::from_string(&version).unwrap();
 			Installer::new(version).run()
 		},
 	};

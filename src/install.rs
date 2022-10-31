@@ -1,11 +1,11 @@
-use crate::versions::VersionString;
+use crate::version::VersionId;
 
 pub struct Installer {
-	version_string: VersionString,
+	version_string: VersionId,
 }
 
 impl Installer {
-	pub fn new(version_string: VersionString) -> Installer {
+	pub fn new(version_string: VersionId) -> Installer {
 		Installer { version_string }
 	}
 
