@@ -1,6 +1,8 @@
 use crate::version::VersionId;
 use std::collections::HashMap;
+use std::cmp;
 
+#[derive(Eq)]
 #[derive(Debug)]
 pub struct RubyVersion {
 	pub id: VersionId,
@@ -12,6 +14,24 @@ impl RubyVersion {
 	fn new(id: VersionId, url: String, publish_timestamp: i64) -> RubyVersion {
 		RubyVersion { id, url: url, publish_timestamp }
 	}
+}
+
+impl cmp::Ord for RubyVersion {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        self.id.cmp(&other.id)
+    }
+}
+
+impl cmp::PartialOrd for RubyVersion {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.id.cmp(&other.id))
+    }
+}
+
+impl cmp::PartialEq for RubyVersion {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
 }
 
 pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
@@ -57,7 +77,9 @@ pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
 		}
 	}
 
-	Ok(versions.into_values().collect())
+	let mut results: Vec<RubyVersion> = versions.into_values().collect();
+	results.sort_unstable();
+	Ok(results)
 }
 
 // TODO: label test as long running

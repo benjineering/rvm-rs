@@ -1,7 +1,9 @@
 use crate::version::Version;
 use std::fmt;
+use std::cmp;
 
 #[derive(Debug)]
+#[derive(Eq)]
 pub struct VersionId {
 	pub interpreter: Option<String>,
 	pub version: Option<Version>,
@@ -100,7 +102,7 @@ impl VersionId {
 
 impl fmt::Display for VersionId {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		let mut vec: Vec<String> = vec!();
+		let mut vec: Vec<String> = vec!(); // TODO: make this lighter
 
 		if self.interpreter.is_some() { 
 			vec.push(self.interpreter.as_ref().unwrap().to_string());
@@ -108,9 +110,36 @@ impl fmt::Display for VersionId {
 
 		if self.version.is_some() { 
 			vec.push(format!("{}", self.version.as_ref().unwrap()));
-		}
-		
+		}		
+        
         write!(f, "{}", vec.join("-"))
+    }
+}
+
+impl cmp::Ord for VersionId {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+
+		if self.interpreter == other.interpreter && self.version == other.version {
+			return cmp::Ordering::Equal;
+		}
+
+		if self.interpreter == other.interpreter {
+			return self.version.cmp(&other.version);
+		}
+
+        self.interpreter.cmp(&other.interpreter)
+    }
+}
+
+impl cmp::PartialOrd for VersionId {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl cmp::PartialEq for VersionId {
+    fn eq(&self, other: &Self) -> bool {
+        self.cmp(other) == cmp::Ordering::Equal
     }
 }
 

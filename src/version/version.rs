@@ -1,6 +1,8 @@
 use std::fmt;
+use std::cmp;
+use std::string::ToString;
 
-#[derive(PartialEq)]
+#[derive(Eq)]
 #[derive(Debug)]
 pub struct Version {
 	pub major: Option<u8>,
@@ -100,6 +102,36 @@ impl fmt::Display for Version {
 		let string_vec = self.numbers_to_string_vec();
 		let label = if self.label.is_some() { format!("-{}", self.label.as_ref().unwrap()) } else { "".to_string() };
         write!(f, "{}{}", string_vec.join("."), label)
+    }
+}
+
+impl cmp::Ord for Version {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
+        if self.major != other.major {
+			return self.major.cmp(&other.major);
+		}
+		
+        if self.minor != other.minor {
+			return self.minor.cmp(&other.minor);
+		}
+		
+        if self.patch != other.patch {
+			return self.patch.cmp(&other.patch);
+		}
+
+		self.label.cmp(&other.label)
+    }
+}
+
+impl cmp::PartialOrd for Version {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl cmp::PartialEq for Version {
+    fn eq(&self, other: &Self) -> bool {
+        self.cmp(other) == cmp::Ordering::Equal
     }
 }
 
