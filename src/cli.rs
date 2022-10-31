@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 
 #[derive(Subcommand)]
 pub enum Command {
+	List,
 	Install {
 		version: String,
 	},

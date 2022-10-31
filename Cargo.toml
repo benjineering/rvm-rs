@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.0.18", features = ["derive"] }
 octocrab = "0.17.0"
-tokio = { version = "1.21.2", features = ["macros"] }
+tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
 
 [[bin]]
 name = "rvm"
