@@ -1,2 +1,2 @@
-# rvm-rs
-A cross platform Ruby version manager written in Rust.
+# win-rvm
+A Ruby version manager for Windows written in Rust.
