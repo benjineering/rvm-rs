@@ -10,6 +10,7 @@ pub struct VersionId {
 }
 
 impl VersionId {
+	#[cfg(test)]
 	pub fn interpreter_and_label(interpreter: &str, major: u8, minor: u8, patch: u8, label: &str) -> VersionId {
 		VersionId {
 			interpreter: Some(interpreter.to_string()),
@@ -17,6 +18,7 @@ impl VersionId {
 		}
 	}
 
+	#[cfg(test)]
 	pub fn interpreter(interpreter: &str) -> VersionId {
 		VersionId {
 			interpreter: Some(interpreter.to_string()),
@@ -24,6 +26,7 @@ impl VersionId {
 		}
 	}
 	
+	#[cfg(test)]
 	pub fn label(major: u8, minor: u8, patch: u8, label: &str) -> VersionId {
 		VersionId {
 			interpreter: None,
@@ -31,13 +34,15 @@ impl VersionId {
 		}
 	}
 	
+	#[cfg(test)]
 	pub fn patch(major: u8, minor: u8, patch: u8) -> VersionId {
 		VersionId {
 			interpreter: None,
 			version: Some(Version::patch(major, minor, patch)),
 		}
 	}
-	
+
+	#[cfg(test)]
 	pub fn minor(major: u8, minor: u8) -> VersionId {
 		VersionId {
 			interpreter: None,
@@ -45,6 +50,7 @@ impl VersionId {
 		}
 	}
 	
+	#[cfg(test)]
 	pub fn major(major: u8) -> VersionId {
 		VersionId {
 			interpreter: None,

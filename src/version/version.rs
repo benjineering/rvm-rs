@@ -12,18 +12,22 @@ pub struct Version {
 }
 
 impl Version {
+	#[cfg(test)]
 	pub fn major(major: u8) -> Version {
 		Version { major: Some(major), minor: None, patch: None, label: None }
 	}
 
+	#[cfg(test)]
 	pub fn minor(major: u8, minor: u8) -> Version {
 		Version { major: Some(major), minor: Some(minor), patch: None, label: None }
 	}
 
+	#[cfg(test)]
 	pub fn patch(major: u8, minor: u8, patch: u8) -> Version {
 		Version { major: Some(major), minor: Some(minor), patch: Some(patch), label: None }
 	}
 
+	#[cfg(test)]
 	pub fn label(major: u8, minor: u8, patch: u8, label: &str) -> Version {
 		Version { major: Some(major), minor: Some(minor), patch: Some(patch), label: Some(label.to_string()) }
 	}
