@@ -72,6 +72,40 @@ impl Version {
 		Ok(Version { major, minor, patch, label })
 	}
 
+	pub fn from_github_asset_name(asset_name: &str) -> Result<Version, ()> {
+		let version_str = asset_name.split('-').nth(1);
+
+		if version_str.is_none() {
+			return Err(());
+		}
+
+		Version::from_string(version_str.unwrap())
+	}
+
+	pub fn includes(&self, other: &Self) -> bool {
+		if self.major.is_none() {
+			return true;
+		}
+
+		if self.major != other.major {
+			return false;
+		}
+
+		if self.minor.is_some() && self.minor != other.minor {
+			return false;
+		}
+
+		if self.patch.is_some() && self.patch != other.patch {
+			return false;
+		}
+
+		if self.label.is_some() && self.label != other.label {
+			return false;
+		}
+
+		true
+	}
+
 	fn parse_int(string: &str) -> Result<u8, ()> {
 		string.parse::<u8>().or_else(|_| Err(()))
 	}

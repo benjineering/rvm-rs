@@ -1,39 +1,7 @@
-use crate::version::VersionId;
+use crate::version::Version;
+use crate::ruby_version::RubyVersion;
 use std::collections::HashMap;
 use octocrab::models::repos::Release;
-use std::cmp;
-
-#[derive(Eq)]
-#[derive(Debug)]
-pub struct RubyVersion {
-	pub id: VersionId,
-	pub url: String,
-	pub publish_timestamp: i64,
-}
-
-impl RubyVersion {
-	fn new(id: VersionId, url: String, publish_timestamp: i64) -> RubyVersion {
-		RubyVersion { id, url: url, publish_timestamp }
-	}
-}
-
-impl cmp::Ord for RubyVersion {
-    fn cmp(&self, other: &Self) -> cmp::Ordering {
-        self.id.cmp(&other.id)
-    }
-}
-
-impl cmp::PartialOrd for RubyVersion {
-    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        Some(self.id.cmp(&other.id))
-    }
-}
-
-impl cmp::PartialEq for RubyVersion {
-    fn eq(&self, other: &Self) -> bool {
-        self.id == other.id
-    }
-}
 
 pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
 	let releases = get_all_releases().await.or_else(|_| Err(()))?;
@@ -45,7 +13,7 @@ pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
 				continue;
 			}
 
-			let id = VersionId::from_github_asset_name(&asset.name);
+			let id = Version::from_github_asset_name(&asset.name);
 
 			if id.is_err() || release.published_at.is_none() {
 				continue; // TODO: log warning
