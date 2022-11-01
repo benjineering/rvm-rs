@@ -1,5 +1,6 @@
 use crate::version::VersionId;
 use std::collections::HashMap;
+use octocrab::models::repos::Release;
 use std::cmp;
 
 #[derive(Eq)]
@@ -35,19 +36,10 @@ impl cmp::PartialEq for RubyVersion {
 }
 
 pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
-	let release_response = octocrab::instance()
-		.repos("oneclick", "rubyinstaller2")
-		.releases()
-		.list()
-		// .per_page(100)
-		// .page(5u32)
-		.send()
-		.await
-		.or_else(|_| Err(()))?;
-
+	let releases = get_all_releases().await.or_else(|_| Err(()))?;
 	let mut versions: HashMap<String, RubyVersion> = HashMap::new();
 
-	for release in release_response.items {
+	for release in releases {
 		for asset in release.assets {
 			if !asset.name.ends_with(".7z") {
 				continue;
@@ -80,6 +72,20 @@ pub async fn get_available_versions() -> Result<Vec<RubyVersion>, ()> {
 	let mut results: Vec<RubyVersion> = versions.into_values().collect();
 	results.sort_unstable();
 	Ok(results)
+}
+
+async fn get_all_releases() -> Result<Vec<Release>, ()> {
+	let octocrab = octocrab::instance();
+
+	let page = octocrab
+		.repos("oneclick", "rubyinstaller2")
+		.releases()
+		.list()
+		.send()
+		.await
+		.or_else(|_| Err(()))?;
+
+	octocrab.all_pages::<Release>(page).await.or_else(|_| Err(()))
 }
 
 // TODO: label test as long running
